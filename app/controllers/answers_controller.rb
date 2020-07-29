@@ -1,6 +1,5 @@
 class AnswersController < ApplicationController
-  def new
-  end
+  def new; end
 
   def create
     @answer = question.answers.create(answer_params)
