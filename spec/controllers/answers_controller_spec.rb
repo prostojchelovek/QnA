@@ -42,4 +42,35 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
   end
+
+  describe 'DELETE #destroy' do
+    let!(:answer) { create(:answer, question: question, user: user) }
+    let!(:other_user) { create(:user) }
+
+    context 'Author' do
+      before { login(user) }
+
+      it 'trying to delete their answer' do
+        expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
+      end
+
+      it 'redirect' do
+        delete :destroy, params: { id: answer }
+        expect(response).to redirect_to question_path(question)
+      end
+    end
+
+    context 'Not author' do
+      before { login(other_user) }
+
+      it "trying to delete someone else's question" do
+        expect { delete :destroy, params: { id: answer } }.to_not change(Answer, :count)
+      end
+
+      it 'redirect' do
+        delete :destroy, params: { id: answer }
+        expect(response).to redirect_to question_path(question)
+      end
+    end
+  end
 end
