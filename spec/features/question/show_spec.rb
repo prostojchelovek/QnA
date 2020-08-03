@@ -1,25 +1,22 @@
 require 'rails_helper'
-feature 'User can view a list of questions', %q{
-  The ability to view a list of questions
-  To find the right one
+
+feature 'User can view the question and answers to it', %q{
+  To find the answer to the question
+  I'd like to view a list of answers to the it
 } do
+
   given(:user) {create(:user)}
-  given!(:questions) {create_list(:question, 15, user: user)}
-  scenario 'Authenticated user tries to view the list of questions' do
-    sign_in(user)
-    visit questions_path
-    questions.each do |question|
-      expect(page).to have_content question.title
-      expect(page).to have_content question.body
-    end
-  end
+  given!(:question) {create(:question, user: user)}
+  given!(:answers) {create_list(:answer, 10, user: user, question: question)}
 
-  scenario 'Unauthenticated user tries to view the list of questions' do
-    visit questions_path
+  scenario 'User tries to view the question and answers to it' do
+    visit question_path(question)
 
-    questions.each do |question|
-      expect(page).to have_content question.title
-      expect(page).to have_content question.body
+    expect(page).to have_content question.title
+    expect(page).to have_content question.body
+
+    answers.each do |answer|
+      expect(page).to have_content answer.body
     end
   end
 end

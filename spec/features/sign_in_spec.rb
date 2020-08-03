@@ -16,6 +16,7 @@ feature 'User can sign in', %q{
     click_on 'Log in'
 
     expect(page).to have_content 'Signed in successfully.'
+    expect(current_path).to eql(root_path)
   end
 
   scenario 'Unregistered user tries to sign in' do
@@ -24,5 +25,6 @@ feature 'User can sign in', %q{
     click_on 'Log in'
 
     expect(page).to have_content 'Invalid Email or password.'
+    expect(current_path).to eql(new_user_session_path)
   end
 end

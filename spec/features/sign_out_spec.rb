@@ -13,6 +13,7 @@ feature 'User can log out', %q{
     click_on 'Logout'
 
     expect(page).to have_content 'Signed out successfully.'
+    expect(current_path).to eql(root_path)
   end
 
   scenario 'Unauthenticated user tries to sing out' do

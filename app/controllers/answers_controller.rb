@@ -1,10 +1,6 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_question, only: %w[new create]
-
-  def new
-    @answer = @question.answers.new
-  end
+  before_action :find_question, only: %w[create]
 
   def create
     @answer = @question.answers.new(answer_params)
@@ -19,7 +15,7 @@ class AnswersController < ApplicationController
 
   def destroy
     @answer = Answer.find(params[:id])
-    @answer.destroy if @answer.user_id == current_user.id
+    @answer.destroy if current_user.author_of?(@answer)
     redirect_to question_path(@answer.question)
   end
 

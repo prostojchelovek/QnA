@@ -37,6 +37,8 @@ feature 'User can create answer to the question', %q{
     click_on 'Answer'
 
     expect(page).to_not have_content 'text text'
+    expect(page).to_not have_content 'Logout'
+    expect(page).to_not have_link 'Delete question'
     expect(page).to have_content 'You need to sign in or sign up before continuing.'
   end
 end
