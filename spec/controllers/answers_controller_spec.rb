@@ -6,34 +6,32 @@ RSpec.describe AnswersController, type: :controller do
   let(:answer) { create(:answer, question: question, user: user) }
 
   describe 'POST #create' do
-
-    context 'with valid attributes' do
+    context 'authenticated user' do
       before { login(user) }
+      context 'with valid attributes' do
+        it 'saves a new answer in the database' do
+          expect { post :create, params: { answer: attributes_for(:answer), question_id: question } }.to change(question.answers, :count).by(1)
+        end
 
-      it 'saves a new answer in the database' do
-        expect { post :create, params: { answer: attributes_for(:answer), question_id: question } }.to change(question.answers, :count).by(1)
+        it 'saves a new answer in the database by anauth user' do
+          expect { post :create, params: { answer: attributes_for(:answer), question_id: question } }.to change(user.answers, :count).by(1)
+        end
+
+        it 'redirects to show view' do
+          post :create, params: { answer: attributes_for(:answer), question_id: question }
+          expect(response).to redirect_to question
+        end
       end
 
-      it 'saves a new answer in the database by anauth user' do
-        expect { post :create, params: { answer: attributes_for(:answer), question_id: question } }.to change(user.answers, :count).by(1)
-      end
+      context 'with invalid attributes' do
+        it 'does not save the answer' do
+          expect { post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question } }.to_not change(Answer, :count)
+        end
 
-      it 'redirects to show view' do
-        post :create, params: { answer: attributes_for(:answer), question_id: question }
-        expect(response).to redirect_to question
-      end
-    end
-
-    context 'with invalid attributes' do
-      before { login(user) }
-
-      it 'does not save the answer' do
-        expect { post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question } }.to_not change(Answer, :count)
-      end
-
-      it 're-renders question view' do
-        post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }
-        expect(response).to render_template 'questions/show'
+        it 're-renders question view' do
+          post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }
+          expect(response).to render_template 'questions/show'
+        end
       end
     end
 
@@ -47,30 +45,31 @@ RSpec.describe AnswersController, type: :controller do
   describe 'DELETE #destroy' do
     let!(:answer) { create(:answer, question: question, user: user) }
     let!(:other_user) { create(:user) }
+    context 'Authenticated user' do
+      context 'Author' do
+        before { login(user) }
 
-    context 'Author' do
-      before { login(user) }
+        it 'trying to delete their answer' do
+          expect { delete :destroy, params: { id: answer } }.to change(user.answers, :count).by(-1)
+        end
 
-      it 'trying to delete their answer' do
-        expect { delete :destroy, params: { id: answer } }.to change(user.answers, :count).by(-1)
+        it 'redirect' do
+          delete :destroy, params: { id: answer }
+          expect(response).to redirect_to question_path(question)
+        end
       end
 
-      it 'redirect' do
-        delete :destroy, params: { id: answer }
-        expect(response).to redirect_to question_path(question)
-      end
-    end
+      context 'Not author' do
+        before { login(other_user) }
 
-    context 'Not author' do
-      before { login(other_user) }
+        it "trying to delete someone else's question" do
+          expect { delete :destroy, params: { id: answer } }.to_not change(Answer, :count)
+        end
 
-      it "trying to delete someone else's question" do
-        expect { delete :destroy, params: { id: answer } }.to_not change(Answer, :count)
-      end
-
-      it 'redirect' do
-        delete :destroy, params: { id: answer }
-        expect(response).to redirect_to question_path(question)
+        it 'redirect' do
+          delete :destroy, params: { id: answer }
+          expect(response).to redirect_to question_path(question)
+        end
       end
     end
 
