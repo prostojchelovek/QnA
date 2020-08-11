@@ -1,20 +1,20 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :find_question, only: %w[create]
+  before_action :find_answer, only: %w[destroy update]
 
   def create
-    @answer = @question.answers.new(answer_params)
+    @answer = @question.answers.create(answer_params)
     @answer.user = current_user
+    @answer.save
+  end
 
-    if @answer.save
-      redirect_to question_path(@answer.question), notice: 'The answer was sent.'
-    else
-      render 'questions/show'
-    end
+  def update
+    @answer.update(answer_params) if current_user.author_of?(@answer)
+    @question = @answer.question
   end
 
   def destroy
-    @answer = Answer.find(params[:id])
     @answer.destroy if current_user.author_of?(@answer)
     redirect_to question_path(@answer.question)
   end
@@ -24,6 +24,11 @@ class AnswersController < ApplicationController
   def find_question
     @question = Question.find(params[:question_id])
   end
+
+  def find_answer
+    @answer = Answer.find(params[:id])
+  end
+
 
   def answer_params
     params.require(:answer).permit(:body)
