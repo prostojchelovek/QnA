@@ -1,9 +1,11 @@
-div id="answer-destroy-#{answer.id}"
-  p= answer.body
-  - if current_user&.author_of?(answer)
-    p= link_to 'Delete answer', answer, remote: true, method: :delete
-    p= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
-    = form_with model: answer, class: 'hidden', method: :patch, html: { id: "edit-answer-#{answer.id}" } do |f|
-      = f.label :body, 'Your answer'
-      = f.text_area :body
-      = f.submit 'Save'
+div id="answer-#{answer.id}"
+  .answer-best class=(answer.best ? 'best' : '')
+    p= answer.body
+    - if current_user&.author_of?(answer)
+      p= link_to 'Best', choose_the_best_answer_path(answer), class: "best-answer", method: :patch, remote: true
+      p= link_to 'Delete answer', answer, remote: true, method: :delete
+      p= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+      = form_with model: answer, class: 'hidden', method: :patch, html: { id: "edit-answer-#{answer.id}" } do |f|
+        = f.label :body, 'Your answer'
+        = f.text_area :body
+        = f.submit 'Save'
