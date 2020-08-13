@@ -7,8 +7,8 @@ class Answer < ApplicationRecord
   validates :body, presence: true
 
   def choose_the_best
-    transaction do
-      question.answers.where(best: true).update_all(best: false)
+    Answer.transaction do
+      question.answers.where(best: true).first.update!(best: false) if question.answers.where(best: true).count > 0
       update!(best: true)
     end
   end

@@ -18,34 +18,43 @@ feature 'User can choose the best answer', %q{
   end
 
   describe 'Authenticated user' do
+    describe 'author' do
+      background do
+        sign_in(user)
+        visit question_path(question)
+      end
 
-    background do
-      sign_in(user)
-      visit question_path(question)
-    end
+      scenario "sees the best answer first", js: true do
+        best_answer = answers.last
+        within("#answer-#{answers.last.id}") { click_on 'Best' }
+        first_answer = find('.answers').first(:element)
+        within first_answer do
+          expect(page).to have_content best_answer.body
+        end
+      end
 
-    scenario "sees the best answer first", js: true do
-      best_answer = answers.last
-      within("#answer-#{answers.last.id}") { click_on 'Best' }
-      first_answer = find('.answers').first(:element)
-      within first_answer do
-        expect(page).to have_content best_answer.body
+      scenario 'chooses the best answer', js: true do
+        first('.best-answer').click
+        expect(page).to have_css('.best', count: 1)
+      end
+
+      scenario 'chooses another best answer', js: true do
+        within "#answer-#{answers.first.id}" do
+          click_on 'Best'
+      end
+        within "#answer-#{answers.second.id}" do
+          click_on 'Best'
+      end
+        expect(page).to have_css('.best', count: 1)
       end
     end
 
-    scenario 'chooses the best answer', js: true do
-      first('.best-answer').click
-      expect(page).to have_css('.best', count: 1)
-    end
-
-    scenario 'chooses another best answer', js: true do
-      within "#answer-#{answers.first.id}" do
-        click_on 'Best'
+    describe 'not author' do
+      scenario "does not see the link" do
+        sign_in(other_user)
+        visit question_path(question)
+        expect(page).to_not have_link 'Best'
       end
-      within "#answer-#{answers.second.id}" do
-        click_on 'Best'
-      end
-      expect(page).to have_css('.best', count: 1)
     end
   end
 end

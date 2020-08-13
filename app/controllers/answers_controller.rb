@@ -10,16 +10,28 @@ class AnswersController < ApplicationController
   end
 
   def update
-    @answer.update(answer_params) if current_user.author_of?(@answer)
-    @question = @answer.question
+    if current_user.author_of?(@answer)
+      @answer.update(answer_params)
+      @question = @answer.question
+    else
+      head :forbidden
+    end
   end
 
   def destroy
-    @answer.destroy if current_user.author_of?(@answer)
+    if current_user.author_of?(@answer)
+      @answer.destroy
+    else
+      head :forbidden
+    end
   end
 
   def choose_the_best
-    @answer.choose_the_best if current_user.author_of?(@answer.question)
+    if current_user.author_of?(@answer.question)
+      @answer.choose_the_best
+    else
+      head :forbidden
+    end
   end
 
   private

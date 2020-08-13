@@ -12,7 +12,7 @@ RSpec.describe Answer, type: :model do
     let!(:answer) { create(:answer, question: question, user: user) }
 
     it 'set true for a better answer' do
-      create_list(:answer, 5, question: question, user: user, best: true)
+      create_list(:answer, 5, question: question, user: user)
       answer.choose_the_best
 
       expect(question.answers.where(best: true).count).to eq 1
