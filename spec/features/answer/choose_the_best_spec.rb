@@ -25,11 +25,11 @@ feature 'User can choose the best answer', %q{
       end
 
       scenario "sees the best answer first", js: true do
-        best_answer = answers.last
+        best_answer = answers.last.body
         within("#answer-#{answers.last.id}") { click_on 'Best' }
         first_answer = find('.answers').first(:element)
         within first_answer do
-          expect(page).to have_content best_answer.body
+          expect(page).to have_content best_answer
         end
       end
 

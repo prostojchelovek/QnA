@@ -8,7 +8,7 @@ class Answer < ApplicationRecord
 
   def choose_the_best
     Answer.transaction do
-      question.answers.where(best: true).first.update!(best: false) if question.answers.where(best: true).count > 0
+      question.answers.where(best: true).first&.update!(best: false) 
       update!(best: true)
     end
   end
