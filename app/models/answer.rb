@@ -4,11 +4,13 @@ class Answer < ApplicationRecord
   belongs_to :user
   belongs_to :question
 
+  has_many_attached :files
+
   validates :body, presence: true
 
   def choose_the_best
     Answer.transaction do
-      question.answers.where(best: true).first&.update!(best: false) 
+      question.answers.where(best: true).first&.update!(best: false)
       update!(best: true)
     end
   end
