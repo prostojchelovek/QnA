@@ -26,7 +26,7 @@ feature 'User can edit his question', %q{
         fill_in 'Title', with: 'question title'
         fill_in 'Body', with: 'question body'
         click_on 'Save'
-        
+
         expect(page).to_not have_content question.title
         expect(page).to_not have_content question.body
         expect(page).to have_content 'question title'
@@ -56,5 +56,20 @@ feature 'User can edit his question', %q{
 
       expect(page).to_not have_button 'Edit'
     end
+
+    scenario "tries to add files", js: true do
+     sign_in user
+     visit question_path(question)
+
+     within ".question" do
+       click_on 'Edit'
+       fill_in 'Body', with: 'question body'
+       attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+       click_on 'Save'
+     end
+
+     expect(page).to have_link 'rails_helper.rb'
+     expect(page).to have_link 'spec_helper.rb'
+   end
   end
 end
