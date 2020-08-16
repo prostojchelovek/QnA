@@ -6,4 +6,6 @@ p= link_to 'list of questions', questions_path
   = f.text_field :title
   = f.label :body
   = f.text_area :body
-  = f.submit 'Ask' 
+  = f.label :files
+  = f.file_field :files, multiple: true
+  = f.submit 'Ask'
