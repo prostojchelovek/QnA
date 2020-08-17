@@ -1,0 +1,4 @@
+$('#answer-' + <%= @answer.id %>).remove();
+$('.answers').prepend('<%= j render @answer %>');
+$('div').removeClass('best');
+$('<%="#answer-#{ @answer.id }" %>').addClass('best');

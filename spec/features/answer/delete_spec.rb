@@ -14,7 +14,7 @@ feature 'User can delete answer', %q{
   given!(:other_user_question) {create(:question, user: other_user)}
   given!(:other_user_answer) {create(:answer, question: other_user_question, user: other_user)}
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     background { sign_in(user) }
 
     scenario 'trying to delete their answer' do
