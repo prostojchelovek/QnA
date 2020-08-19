@@ -26,7 +26,7 @@ feature 'User can edit his question', %q{
         fill_in 'Title', with: 'question title'
         fill_in 'Body', with: 'question body'
         click_on 'Save'
-        
+
         expect(page).to_not have_content question.title
         expect(page).to_not have_content question.body
         expect(page).to have_content 'question title'

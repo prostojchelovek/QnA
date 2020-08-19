@@ -10,7 +10,7 @@ feature 'User can choose the best answer', %q{
   given!(:question) { create(:question, user: user) }
   given!(:answers) { create_list(:answer, 10, question: question, user: user) }
   given!(:other_user) { create(:user) }
-  given!(:another_question) { create(:question, user: other_user) }
+  given!(:other_question) { create(:question, user: other_user) }
 
   scenario 'Unauthenticated can not choose the best answer' do
     visit question_path(question)
@@ -25,11 +25,11 @@ feature 'User can choose the best answer', %q{
       end
 
       scenario "sees the best answer first", js: true do
-        best_answer = answers.last.body
+        best_answer = answers.last
         within("#answer-#{answers.last.id}") { click_on 'Best' }
         first_answer = find('.answers').first(:element)
         within first_answer do
-          expect(page).to have_content best_answer
+          expect(page).to have_content best_answer.body
         end
       end
 
