@@ -5,6 +5,12 @@ p= link_to 'Back', questions_path
 
 = render @question
 
+.linkss
+  p Links:
+  ul
+    - @question.links.each do |link|
+      li= link_to link.name, link.url
+
 .answers
   = render @question.answers
 
@@ -12,6 +18,7 @@ p= link_to 'Back', questions_path
   = render 'shared/errors', resource: @answer
 - if user_signed_in?
   = form_with model: [@question, @answer], class: 'new-answer' do |f|
+
     p
       = f.label :body
       = f.text_area :body
@@ -19,4 +26,12 @@ p= link_to 'Back', questions_path
     p
       = f.label :files
       = f.file_field :files, multiple: true
+
+    h3 Links
+    #links
+      = f.fields_for :links do |l|
+        = render 'link_fields', f: l
+      .links
+        = link_to_add_association 'Add link', f, :links
+
     = f.submit 'Answer'

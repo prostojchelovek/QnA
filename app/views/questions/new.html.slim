@@ -9,8 +9,16 @@ p= link_to 'list of questions', questions_path
   p
     = f.label :body
     = f.text_area :body
-    
+
   p
     = f.label :files
     = f.file_field :files, multiple: true
+
+    h3 Links
+    #links
+      = f.fields_for :links do |l|
+        = render 'link_fields', f: l
+      .links
+        = link_to_add_association 'Add link', f, :links
+
   = f.submit 'Ask'
