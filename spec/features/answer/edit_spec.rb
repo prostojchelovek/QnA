@@ -9,6 +9,7 @@ feature 'User can edit his answer', %q{
   given!(:user) { create(:user) }
   given!(:question) { create(:question, user: user) }
   given!(:answer) { create(:answer, question: question, user: user) }
+  given!(:link) {'https://www.youtube.com/watch?v=x23aIQPa-DY'}
 
   scenario 'Unauthenticated can not edit answer' do
     visit question_path(question)
@@ -51,6 +52,21 @@ feature 'User can edit his answer', %q{
       visit question_path(question)
 
       expect(page).to_not have_button 'Edit'
+    end
+
+    scenario 'adds his new links when editing an answer', js: true do
+      sign_in user
+      visit question_path(question)
+
+      within '.answers' do
+        click_on 'Edit'
+        click_on 'Add link'
+        fill_in 'Link name', with: 'asdfghjk'
+        fill_in 'Url', with: link
+        click_on 'Save'
+      end
+
+      expect(page).to have_link 'asdfghjk', href: link
     end
   end
 end

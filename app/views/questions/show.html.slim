@@ -5,18 +5,8 @@ p= link_to 'Back', questions_path
 
 = render @question
 
-.links
-  - if @question.links.count > 0
-    p Links:
-    ul
-      - @question.links.each do |link|
-        div class="link-#{link.id}"
-          - if link.gist?
-            script src="#{link.url}.js"
-          - else
-            li= link_to link.name, link.url
-          - if current_user&.author_of?(@question)
-            = link_to 'Delete link', link_path(link), method: :delete, remote: true
+.question_links
+  = render 'links_list'
 
 .answers
   = render @question.answers

@@ -24,7 +24,7 @@ feature 'User can choose the best answer', %q{
         visit question_path(question)
       end
 
-      scenario "sees the best answer first", js: true do  
+      scenario "sees the best answer first", js: true do
         within("#answer-#{answers.last.id}") { click_on 'Best' }
         first_answer = find('.answers').first(:element)
         best_answer = answers.last.body
