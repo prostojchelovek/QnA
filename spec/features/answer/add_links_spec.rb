@@ -8,7 +8,7 @@ feature 'User can add links to answer', %q{
 
   given(:user) {create(:user)}
   given!(:question) {create(:question, user: user) }
-  given(:gist_url) {'https://gist.github.com/vkurennov/743f9367caa1039874af5a2244e1b44c'}
+  given(:gist_url) {'https://github.com/nathanvda/cocoon/pull/454'}
   given(:invalid_url) {'dfgsasdads'}
 
   scenario 'User adds link when give an answer', js: true do
