@@ -15,6 +15,7 @@ class Answer < ApplicationRecord
     Answer.transaction do
       question.answers.where(best: true).first&.update!(best: false)
       update!(best: true)
+      question.badge&.update!(user: user)
     end
   end
 end
