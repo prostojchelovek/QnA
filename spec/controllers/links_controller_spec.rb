@@ -20,14 +20,14 @@ RSpec.describe LinksController, type: :controller do
       context 'not the author' do
         before { login(other_user) }
 
-        it 'removes link' do
+        it 'not removes link' do
           expect { delete :destroy, params: { id: link.id }, format: :js }.to_not change(Link, :count)
         end
       end
     end
 
     context 'Unauthenticate user' do
-      it 'removes link' do
+      it 'not removes link' do
         expect { delete :destroy, params: { id: link.id }, format: :js }.to_not change(Link, :count)
       end
     end
