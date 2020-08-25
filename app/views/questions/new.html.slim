@@ -9,8 +9,27 @@ p= link_to 'list of questions', questions_path
   p
     = f.label :body
     = f.text_area :body
-    
+
   p
     = f.label :files
     = f.file_field :files, multiple: true
+
+    h3 Links
+    #links
+      = f.fields_for :links do |l|
+        = render 'link_fields', f: l
+      .links
+        = link_to_add_association 'Add link', f, :links
+
+    p Badge:
+    p
+      = f.fields_for :badge do |b|
+        p
+          = b.label :title, 'Badge title'
+          = b.text_field :title
+
+        p
+          = b.label :image
+          = b.file_field :image
+
   = f.submit 'Ask'
