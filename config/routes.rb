@@ -4,9 +4,14 @@ Rails.application.routes.draw do
   resources :attachments, only: [:destroy]
   resources :links, only: [:destroy]
   resources :badges, only: [:index]
+  concern :votable do
+    member do
+      post :vote_up, :vote_down
+    end
+  end
 
-  resources :questions do
-    resources :answers, shallow: true do
+  resources :questions, concerns: :votable do
+    resources :answers, concerns: :votable, shallow: true do
       patch :choose_the_best, on: :member
     end
   end

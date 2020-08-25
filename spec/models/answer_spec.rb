@@ -4,6 +4,7 @@ RSpec.describe Answer, type: :model do
   it { should belong_to(:user) }
   it { should belong_to(:question) }
   it { should have_many(:links).dependent(:destroy) }
+  it { should have_many(:votes).dependent(:destroy) }
 
   it 'have many attached files' do
     expect(Answer.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
@@ -34,4 +35,6 @@ RSpec.describe Answer, type: :model do
       expect(question.badge.user).to eq other_user
     end
   end
+
+  it_behaves_like 'votable'
 end

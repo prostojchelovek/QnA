@@ -1,4 +1,6 @@
 class AnswersController < ApplicationController
+  include Voted
+
   before_action :authenticate_user!
   before_action :find_question, only: %w[create]
   before_action :find_answer, only: %w[update destroy choose_the_best]
@@ -46,6 +48,6 @@ class AnswersController < ApplicationController
 
 
   def answer_params
-    params.require(:answer).permit(:body, files: [], links_attributes: [:name, :url])
+    params.require(:answer).permit(:body, files: [], links_attributes: [:name, :url, :id, :_destroy])
   end
 end

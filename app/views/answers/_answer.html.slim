@@ -13,6 +13,22 @@ div id="answer-#{answer.id}" class=(answer.best ? 'best' : '')
                 li= link_to link.name, link.url
               - if current_user&.author_of?(answer)
                 = link_to 'Delete link', link_path(link), method: :delete, remote: true
+    .vote
+      p Vote:
+      div class="vote-#{answer.class.name.downcase}-#{answer.id}"
+        .rating
+          =  "rating: #{answer.rating}"
+        - unless current_user&.author_of?(answer)
+          .voting
+            = link_to 'up', polymorphic_path(answer, action: :vote_up),
+                                                              method: :post,
+                                                              remote: true,
+                                                              data: { type: :json }
+            = " | "
+            = link_to 'down', polymorphic_path(answer, action: :vote_down),
+                                                                method: :post,
+                                                                remote: true,
+                                                                data: { type: :json }
   - if answer.files.attached?
       - answer.files.each do |file|
         div id= file.id
