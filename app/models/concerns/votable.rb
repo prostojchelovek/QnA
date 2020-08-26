@@ -6,11 +6,11 @@ module Votable
   end
 
   def vote_up(user)
-    votes.create!(user: user, value: 1)
+    votes.create!(user: user, value: 1) unless user.already_voted?(id)
   end
 
   def vote_down(user)
-    votes.create!(user: user, value: -1)
+    votes.create!(user: user, value: -1) unless user.already_voted?(id)
   end
 
   def rating

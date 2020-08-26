@@ -23,4 +23,20 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe '#already_voted?' do
+    let(:user) { create(:user) }
+    let(:other_user) { create(:user) }
+    let(:question) { create(:question, user: user) }
+
+    before { question.vote_up(other_user) }
+
+    it 'user already voted the resource' do
+      expect(other_user).to be_already_voted(question.id)
+    end
+
+    it 'user has not voted the resource' do
+      expect(user).to_not be_already_voted(question.id)
+    end
+  end
 end

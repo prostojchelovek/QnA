@@ -22,7 +22,7 @@ module Voted
   private
 
   def render_json
-    render json: { value: @votable.votes.pluck(:value).sum, klass: @votable.class.to_s, id: @votable.id }
+    render json: { value: @votable.rating, klass: @votable.class.to_s, id: @votable.id }
   end
 
   def set_votable
