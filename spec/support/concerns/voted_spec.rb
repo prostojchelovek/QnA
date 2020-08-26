@@ -48,4 +48,26 @@ RSpec.shared_examples 'voted' do
       end
     end
   end
+
+  describe 'DELETE #cancel_vote' do
+    context 'user can cancel his vote' do
+      before { login(other_user) }
+
+      let!(:user_votable) { voted(model, user) }
+
+      it 'cancel vote' do
+        post :vote_up, params: { id: user_votable }
+        expect { delete :cancel_vote, params: { id: user_votable } }.to change(Vote, :count).by(-1)
+      end
+    end
+
+    context 'user can not cancel other vote' do
+      let(:new_user) { create(:user) }
+      let!(:new_vote) { voted(model, new_user) }
+
+      it "user can not cancel other user's vote" do
+        expect { delete :cancel_vote, params: { id: new_vote } }.to_not change(Vote, :count)
+      end
+    end
+  end
 end

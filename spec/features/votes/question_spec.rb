@@ -30,9 +30,20 @@ feature 'User can vote for a question', %q{
     scenario 'can vote only once' do
       within ".vote-question-#{other_question.id}" do
         click_on 'down'
-        click_on 'up'
-        click_on 'up'
+        
         expect(page).to have_content '-1'
+        expect(page).to_not have_content 'up'
+        expect(page).to_not have_content 'down'
+      end
+    end
+
+    scenario 'can re-vote' do
+      within ".vote-question-#{other_question.id}" do
+        click_on 'up'
+        expect(page).to have_link 'cancel vote'
+
+        click_on 'cancel vote'
+        expect(page).to_not have_link 'cancel vote'
       end
     end
 

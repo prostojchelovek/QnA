@@ -2,7 +2,7 @@ module Voted
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_votable, only: %w[vote_up vote_down]
+    before_action :set_votable, only: %w[vote_up vote_down cancel_vote]
   end
 
   def vote_up
@@ -17,6 +17,11 @@ module Voted
       @votable.vote_down(current_user)
       render_json
     end
+  end
+
+  def cancel_vote
+    @votable.votes.find_by(user_id: current_user)&.destroy
+    render_json
   end
 
   private

@@ -25,6 +25,10 @@
                                                                 method: :post,
                                                                 remote: true,
                                                                 data: { type: :json }
+        .re-vote
+          = link_to 'cancel vote', polymorphic_path(@question, action: :cancel_vote),
+                                    class: "cancel-vote-link #{'hidden' unless current_user&.already_voted?(@question.id)}",
+                                    method: :delete, remote: true, data: {type: :json}
 
   - if current_user&.author_of?(@question)
     p= link_to 'Delete question', question_path(@question), method: :delete

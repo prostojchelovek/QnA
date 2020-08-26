@@ -29,6 +29,10 @@ div id="answer-#{answer.id}" class=(answer.best ? 'best' : '')
                                                                 method: :post,
                                                                 remote: true,
                                                                 data: { type: :json }
+          .re-vote
+            = link_to 'cancel vote', polymorphic_path(answer, action: :cancel_vote),
+                                          class: "cancel-vote-link #{'hidden' unless current_user&.already_voted?(answer.id)}",
+                                          method: :delete, remote: true, data: {type: :json}
   - if answer.files.attached?
       - answer.files.each do |file|
         div id= file.id
