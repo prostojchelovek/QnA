@@ -4,7 +4,7 @@ module ControllerHelpers
     sign_in(user)
   end
 
-  def liked(model, user)
+  def voted(model, user)
     if model.to_s == 'Answer'
       question = create(:question, user: user)
       create(model.to_s.underscore.to_sym, question: question, user: user)

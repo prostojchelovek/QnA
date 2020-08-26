@@ -18,7 +18,7 @@ div id="answer-#{answer.id}" class=(answer.best ? 'best' : '')
       div class="vote-#{answer.class.name.downcase}-#{answer.id}"
         .rating
           =  "rating: #{answer.rating}"
-        - unless current_user&.author_of?(answer)
+        - unless current_user&.author_of?(answer) || !current_user
           .voting
             = link_to 'up', polymorphic_path(answer, action: :vote_up),
                                                               method: :post,

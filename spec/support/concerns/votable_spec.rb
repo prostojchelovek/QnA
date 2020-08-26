@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.shared_examples_for 'votable' do
   let(:model) { described_class }
   let(:user) { create(:user) }
+  let(:other_user) { create(:user) }
   let(:votable) do
     if model.to_s == 'Answer'
       question = create(:question, user: user)
@@ -13,17 +14,17 @@ RSpec.shared_examples_for 'votable' do
   end
 
   it '#vote_up' do
-    votable.vote_up(user)
+    votable.vote_up(other_user)
 
     expect(Vote.last.value).to eq 1
-    expect(Vote.last.user).to eq user
+    expect(Vote.last.user).to eq other_user
     expect(Vote.last.votable).to eq votable
   end
 
   it '#vote_down' do
-    votable.vote_down(user)
+    votable.vote_down(other_user)
     expect(Vote.last.value).to eq -1
-    expect(Vote.last.user).to eq user
+    expect(Vote.last.user).to eq other_user
     expect(Vote.last.votable).to eq votable
   end
 end

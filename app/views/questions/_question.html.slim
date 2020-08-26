@@ -14,7 +14,7 @@
     div class="vote-#{@question.class.name.downcase}-#{@question.id}"
       .rating
         =  "rating: #{@question.rating}"
-      - unless current_user&.author_of?(@question)
+      - unless current_user&.author_of?(@question) || !current_user
         .voting
           = link_to 'up', polymorphic_path(@question, action: :vote_up),
                                                               method: :post,

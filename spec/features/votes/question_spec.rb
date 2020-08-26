@@ -26,5 +26,27 @@ feature 'User can vote for a question', %q{
         expect(page).to have_content '-1'
       end
     end
+
+    scenario "Author can't vote for their answer" do
+      click_on 'Logout'
+      sign_in(user)
+      visit question_path(question)
+
+      within ".question" do
+        expect(page).to_not have_content 'down'
+        expect(page).to_not have_content 'up'
+      end
+    end
+  end
+
+  describe 'Unauthenticated user', js: true do
+    scenario "can't vote for the answer" do
+      visit question_path(question)
+
+      within ".question" do
+        expect(page).to_not have_content 'down'
+        expect(page).to_not have_content 'up'
+      end
+    end
   end
 end

@@ -6,13 +6,17 @@ module Voted
   end
 
   def vote_up
-    @votable.vote_up(current_user)
-    render_json
+    unless current_user.author_of?(@votable)
+      @votable.vote_up(current_user)
+      render_json
+    end
   end
 
   def vote_down
-    @votable.vote_down(current_user)
-    render_json
+    unless current_user.author_of?(@votable)
+      @votable.vote_down(current_user)
+      render_json
+    end
   end
 
   private
