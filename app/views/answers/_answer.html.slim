@@ -14,25 +14,7 @@ div id="answer-#{answer.id}" class=(answer.best ? 'best' : '')
               - if current_user&.author_of?(answer)
                 = link_to 'Delete link', link_path(link), method: :delete, remote: true
     .vote
-      p Vote:
-      div class="vote-#{answer.class.name.downcase}-#{answer.id}"
-        .rating
-          =  "rating: #{answer.rating}"
-        - unless current_user&.author_of?(answer) || !current_user
-          .voting
-            = link_to 'up', polymorphic_path(answer, action: :vote_up),
-                                                              method: :post,
-                                                              remote: true,
-                                                              data: { type: :json }
-            = " | "
-            = link_to 'down', polymorphic_path(answer, action: :vote_down),
-                                                                method: :post,
-                                                                remote: true,
-                                                                data: { type: :json }
-          .re-vote
-            = link_to 'cancel vote', polymorphic_path(answer, action: :cancel_vote),
-                                          class: "cancel-vote-link #{'hidden' unless current_user&.already_voted?(answer.id)}",
-                                          method: :delete, remote: true, data: {type: :json}
+      = render 'shared/vote', resource: answer
   - if answer.files.attached?
       - answer.files.each do |file|
         div id= file.id

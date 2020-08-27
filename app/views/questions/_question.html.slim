@@ -10,25 +10,7 @@
           - if current_user&.author_of?(@question)
             = link_to 'Delete file', attachment_path(file), method: :delete, remote: true
   .vote
-    p Vote:
-    div class="vote-#{@question.class.name.downcase}-#{@question.id}"
-      .rating
-        =  "rating: #{@question.rating}"
-      - unless current_user&.author_of?(@question) || !current_user
-        .voting
-          = link_to 'up', polymorphic_path(@question, action: :vote_up),
-                                                              method: :post,
-                                                              remote: true,
-                                                              data: { type: :json }
-          = " | "
-          = link_to 'down', polymorphic_path(@question, action: :vote_down),
-                                                                method: :post,
-                                                                remote: true,
-                                                                data: { type: :json }
-        .re-vote
-          = link_to 'cancel vote', polymorphic_path(@question, action: :cancel_vote),
-                                    class: "cancel-vote-link #{'hidden' unless current_user&.already_voted?(@question.id)}",
-                                    method: :delete, remote: true, data: {type: :json}
+    = render 'shared/vote', resource: @question
 
   - if current_user&.author_of?(@question)
     p= link_to 'Delete question', question_path(@question), method: :delete

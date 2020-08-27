@@ -6,12 +6,14 @@ feature 'User can vote for a answer', %q{
 } do
   given(:user) { create(:user) }
   given(:other_user) { create(:user) }
+  given(:user3) { create(:user) }
+  given(:user4) { create(:user) }
   given!(:question) { create(:question, user: user) }
   given!(:other_question) { create(:question, user: other_user) }
   given!(:answer) { create(:answer, question: question, user: user) }
   given!(:other_answer) { create(:answer, question: other_question, user: other_user) }
 
-  describe 'Authenticated user', js: true do
+  describe 'Authenticated user(s)', js: true do
     before { sign_in(user) }
     before { visit question_path(other_question) }
 
@@ -41,10 +43,39 @@ feature 'User can vote for a answer', %q{
     scenario 'can re-vote' do
       within ".vote-answer-#{other_answer.id}" do
         click_on 'up'
+        expect(page).to_not have_content 'up'
+        expect(page).to_not have_content 'down'
         expect(page).to have_link 'cancel vote'
+        expect(page).to have_content '1'
 
         click_on 'cancel vote'
         expect(page).to_not have_link 'cancel vote'
+        expect(page).to have_content 'up'
+        expect(page).to have_content 'down'
+        expect(page).to have_content '0'
+      end
+    end
+
+    scenario 'can vote for and against the answer' do
+      within ".vote-answer-#{other_answer.id}" do
+        click_on 'up'
+        expect(page).to have_content '1'
+      end
+
+      click_on 'Logout'
+      sign_in(user3)
+      visit question_path(other_question)
+      within ".vote-answer-#{other_answer.id}" do
+        click_on 'up'
+        expect(page).to have_content '2'
+      end
+
+      click_on 'Logout'
+      sign_in(user4)
+      visit question_path(other_question)
+      within ".vote-answer-#{other_answer.id}" do
+        click_on 'down'
+        expect(page).to have_content '1'
       end
     end
 
