@@ -9,6 +9,8 @@
           =" "
           - if current_user&.author_of?(@question)
             = link_to 'Delete file', attachment_path(file), method: :delete, remote: true
+  .vote
+    = render 'shared/vote', resource: @question
 
   - if current_user&.author_of?(@question)
     p= link_to 'Delete question', question_path(@question), method: :delete

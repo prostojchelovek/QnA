@@ -3,6 +3,8 @@ class AnswersController < ApplicationController
   before_action :find_question, only: %w[create]
   before_action :find_answer, only: %w[update destroy choose_the_best]
 
+  include Voted
+
   def create
     @answer = @question.answers.create(answer_params)
     @answer.user = current_user
@@ -46,6 +48,6 @@ class AnswersController < ApplicationController
 
 
   def answer_params
-    params.require(:answer).permit(:body, files: [], links_attributes: [:name, :url])
+    params.require(:answer).permit(:body, files: [], links_attributes: [:name, :url, :id, :_destroy])
   end
 end
