@@ -1,9 +1,9 @@
 class AnswersController < ApplicationController
-  include Voted
-
   before_action :authenticate_user!
   before_action :find_question, only: %w[create]
   before_action :find_answer, only: %w[update destroy choose_the_best]
+
+  include Voted
 
   def create
     @answer = @question.answers.create(answer_params)
