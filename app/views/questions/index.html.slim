@@ -1,8 +1,9 @@
 p= link_to 'Ask question', new_question_path
 p= link_to 'My Badges', badges_path
 
-table
+.questions
   - @questions.each do |q|
-    tr
-      td= link_to q.title, q
-      td= q.body
+      p
+        = link_to q.title, q
+        br
+        = q.body
