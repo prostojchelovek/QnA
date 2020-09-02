@@ -9,6 +9,15 @@
           =" "
           - if current_user&.author_of?(@question)
             = link_to 'Delete file', attachment_path(file), method: :delete, remote: true
+
+  .question_comments
+    .question-comment-errors
+      = render 'shared/errors', resource: @comment
+    = render @question.comments, resource: @question
+  - if user_signed_in?
+    .add_comment
+      = render 'comments/form', resource: @question
+
   .vote
     = render 'shared/vote', resource: @question
 

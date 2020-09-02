@@ -1,0 +1,12 @@
+<% resource_type = @comment.commentable_type.downcase %>
+<% resource_id = @comment.commentable_id %>
+$('.<%= "#{resource_type}" %>-comment-errors').html('<%= render 'shared/errors', resource: @comment %>')
+
+<% if @comment.persisted? %>
+  <% if resource_type == 'question' %>
+    $('.<%= resource_type %>_comments').append('<%= j render @comment %>');
+  <% else %>
+    $('#answer-<%= resource_id %>').find('.<%= resource_type %>_comments').append('<%= j render @comment %>');
+  <% end %>
+  $('.new_comment #comment_body').val('');
+<% end %>
