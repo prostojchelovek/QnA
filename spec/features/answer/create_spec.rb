@@ -8,6 +8,7 @@ feature 'User can create answer to the question', %q{
 } do
 
   given(:user) {create(:user)}
+  given(:other_user) { create(:user) }
   given(:question) {create(:question, user: user)}
 
   describe 'Authenticated user', js: true do
@@ -46,5 +47,28 @@ feature 'User can create answer to the question', %q{
     expect(page).to_not have_content 'text text'
     expect(page).to_not have_content 'Logout'
     expect(page).to_not have_link 'Delete question'
+  end
+
+  describe 'Multiple sessions', js: true do
+    scenario "answer appears on another user's page" do
+      Capybara.using_session('user') do
+        sign_in(user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('guest') do
+        visit question_path(question)
+      end
+
+      Capybara.using_session('user') do
+        fill_in 'Body', with: 'text text text'
+        click_on 'Answer'
+        expect(page).to have_content 'text text text'
+      end
+
+      Capybara.using_session('guest') do
+        expect(page).to have_content 'text text text'
+      end
+    end
   end
 end

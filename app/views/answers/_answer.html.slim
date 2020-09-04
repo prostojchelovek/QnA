@@ -13,6 +13,15 @@ div id="answer-#{answer.id}" class=(answer.best ? 'best' : '')
                 li= link_to link.name, link.url
               - if current_user&.author_of?(answer)
                 = link_to 'Delete link', link_path(link), method: :delete, remote: true
+
+    .answer_comments id="answer-comments-#{answer.id}"
+      .answer-comment-errors
+        = render 'shared/errors', resource: @comment
+      = render answer.comments, resource: answer
+    - if user_signed_in?
+      .add_comment
+        = render 'comments/form', resource: answer
+
     .vote
       = render 'shared/vote', resource: answer
   - if answer.files.attached?

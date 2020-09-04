@@ -3,6 +3,8 @@ class AnswersController < ApplicationController
   before_action :find_question, only: %w[create]
   before_action :find_answer, only: %w[update destroy choose_the_best]
 
+  after_action :publish_answer, only: [:create]
+
   include Voted
 
   def create
@@ -49,5 +51,11 @@ class AnswersController < ApplicationController
 
   def answer_params
     params.require(:answer).permit(:body, files: [], links_attributes: [:name, :url, :id, :_destroy])
+  end
+
+  def publish_answer
+    return if @answer.errors.any?
+
+    ActionCable.server.broadcast("question_#{@answer.question_id}", @answer)
   end
 end
