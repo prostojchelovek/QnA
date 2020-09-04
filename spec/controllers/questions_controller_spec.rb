@@ -139,14 +139,6 @@ RSpec.describe QuestionsController, type: :controller do
           end
         end
       end
-
-      context 'not author' do
-        before { login(other_user) }
-        it 'returns status :forbidden' do
-          patch :update, params: { id: question,  question: attributes_for(:question) }
-          expect(response).to have_http_status(:forbidden)
-        end
-      end
     end
 
     context 'Unauthenticated user' do
@@ -186,12 +178,6 @@ RSpec.describe QuestionsController, type: :controller do
 
         it "trying to delete someone else's question" do
           expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)
-        end
-
-
-        it 'returns status :forbidden' do
-          delete :destroy, params: { id: question }
-          expect(response).to have_http_status(:forbidden)
         end
       end
     end

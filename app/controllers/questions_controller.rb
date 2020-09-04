@@ -6,6 +6,8 @@ class QuestionsController < ApplicationController
 
   include Voted
 
+  authorize_resource
+
   def index
     @questions = Question.all
   end
@@ -34,20 +36,12 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    if current_user.author_of?(@question)
-      @question.update(question_params)
-    else
-      head :forbidden
-    end
+    @question.update(question_params)
   end
 
   def destroy
-    if current_user.author_of?(@question)
-      @question.destroy
-      redirect_to questions_path
-    else
-      head :forbidden
-    end
+    @question.destroy
+    redirect_to questions_path
   end
 
   private
