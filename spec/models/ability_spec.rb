@@ -11,6 +11,7 @@ describe Ability do
     it { should be_able_to :read, Comment }
     it { should be_able_to :read, Link }
     it { should be_able_to :read, Vote }
+    it { should_not be_able_to :read, Badge }
 
     it { should_not be_able_to :manage, :all }
   end
