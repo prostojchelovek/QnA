@@ -7,6 +7,8 @@ class AnswersController < ApplicationController
 
   include Voted
 
+  authorize_resource
+
   def create
     @answer = @question.answers.create(answer_params)
     @answer.user = current_user
@@ -14,28 +16,16 @@ class AnswersController < ApplicationController
   end
 
   def update
-    if current_user.author_of?(@answer)
-      @answer.update(answer_params)
-      @question = @answer.question
-    else
-      head :forbidden
-    end
+    @answer.update(answer_params)
+    @question = @answer.question
   end
 
   def destroy
-    if current_user.author_of?(@answer)
-      @answer.destroy
-    else
-      head :forbidden
-    end
+    @answer.destroy
   end
 
   def choose_the_best
-    if current_user.author_of?(@answer.question)
-      @answer.choose_the_best
-    else
-      head :forbidden
-    end
+    @answer.choose_the_best
   end
 
   private

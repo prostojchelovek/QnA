@@ -66,11 +66,6 @@ RSpec.describe AnswersController, type: :controller do
         it "trying to delete someone else's question" do
           expect { delete :destroy, params: { id: answer }, format: :js }.to_not change(Answer, :count)
         end
-
-        it 'returns status :forbidden' do
-          delete :destroy, params: { id: answer }, format: :js
-          expect(response).to have_http_status(:forbidden)
-        end
       end
     end
 
@@ -119,11 +114,6 @@ RSpec.describe AnswersController, type: :controller do
       context 'not author' do
         before { login(other_user) }
 
-        it 'returns status :forbidden' do
-          patch :update, params: { id: answer, answer: attributes_for(:answer) }, format: :js
-          expect(response).to have_http_status(:forbidden)
-        end
-
         it 'does not update answer' do
           patch :update, params: { id: answer, answer: attributes_for(:answer) }, format: :js
           answer.reload
@@ -171,11 +161,6 @@ RSpec.describe AnswersController, type: :controller do
           answer.reload
 
           expect(answer).to_not be_best
-        end
-
-        it 'returns status :forbidden' do
-           patch :choose_the_best, params: { id: answer, format: :js }
-           expect(response).to have_http_status(:forbidden)
         end
       end
     end

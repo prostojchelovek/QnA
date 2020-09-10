@@ -11,7 +11,7 @@ div id="answer-#{answer.id}" class=(answer.best ? 'best' : '')
                 script src="#{link.url}.js"
               - else
                 li= link_to link.name, link.url
-              - if current_user&.author_of?(answer)
+              - if can? :destroy, link
                 = link_to 'Delete link', link_path(link), method: :delete, remote: true
 
     .answer_comments id="answer-comments-#{answer.id}"
@@ -30,10 +30,11 @@ div id="answer-#{answer.id}" class=(answer.best ? 'best' : '')
           p
             = link_to file.filename.to_s, url_for(file)
             = " "
-            - if current_user&.author_of?(answer)
+            - if can? :destroy, file
               = link_to 'Delete file', attachment_path(file), method: :delete, remote: true
-  - if current_user&.author_of?(answer)
+  - if can? :destroy, answer
     p= link_to 'Delete answer', answer, remote: true, method: :delete
+  - if can? :update, answer
     p= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
     = form_with model: answer, class: 'hidden', method: :patch, html: { id: "edit-answer-#{answer.id}" } do |f|
       p
