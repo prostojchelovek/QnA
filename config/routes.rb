@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  use_doorkeeper
   devise_for :users
   root to: 'questions#index'
   resources :attachments, only: [:destroy]
@@ -18,6 +19,21 @@ Rails.application.routes.draw do
   resources :questions, concerns: %i[votable commentable] do
     resources :answers, concerns: %i[votable commentable], shallow: true do
       patch :choose_the_best, on: :member
+    end
+  end
+
+  namespace :api do
+    namespace :v1 do
+      resources :profiles, only: [] do
+        collection do
+          get :me
+          get :all
+        end
+      end
+
+      resources :questions, shallow: true do
+        resources :answers
+      end
     end
   end
 
