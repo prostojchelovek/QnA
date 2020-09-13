@@ -5,7 +5,7 @@ class Api::V1::ProfilesController < Api::V1::BaseController
   end
 
   def all
-    @users = User.all.where.not(id: current_resource_owner&.id)
+    @users = User.where.not(id: current_resource_owner&.id)
     authorize! :read, @users
     render json: @users
   end
