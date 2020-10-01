@@ -27,9 +27,9 @@ feature 'User can subscribe to the question', %q{
     end
 
     scenario 'tries to subscribe twice' do
-      question.subscribe(other_user)
       visit question_path(question)
-
+      click_on 'Subscribe'
+      
       expect(page).to_not have_link('Subscribe')
     end
   end

@@ -20,8 +20,8 @@ feature 'User can unsubscribe to the question', %q{
     before { sign_in(other_user) }
 
     scenario 'tries to unsubscribe' do
-      question.subscribe(other_user)
       visit question_path(question)
+      click_on 'Subscribe'
       click_on 'Unsubscribe'
 
       expect(page).to have_text('Unsubscribed')

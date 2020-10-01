@@ -1,4 +1,4 @@
-subscription
+div class="subscription"
   - if can?(:subscribe, @question)
     = link_to 'Subscribe', question_subscription_path(@question), method: :post, remote: true, class: 'subscribe'
   - if can?(:unsubscribe, @question)

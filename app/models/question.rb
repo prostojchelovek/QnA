@@ -16,11 +16,15 @@ class Question < ApplicationRecord
 
   validates :title, :body, presence: true
 
-  def subscribe(user)
-    subscriptions.create!(user_id: user.id)
-  end
+  after_create :subscribe
 
   def unsubscribe(user)
     subscriptions.where(user_id: user.id).delete_all
+  end
+
+  private
+
+  def subscribe
+    subscriptions.create!(user_id: user.id)
   end
 end

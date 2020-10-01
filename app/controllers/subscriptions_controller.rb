@@ -4,7 +4,7 @@ class SubscriptionsController < ApplicationController
 
   def create
     authorize! :subscribe, @question
-    @question.subscribe(current_user)
+    current_user.subscriptions.create!(question: @question)
     flash['notice'] = 'Subscribed'
   end
 
