@@ -14,11 +14,19 @@ class Answer < ApplicationRecord
 
   validates :body, presence: true
 
+  after_save :notify
+
   def choose_the_best
     Answer.transaction do
       question.answers.where(best: true).first&.update!(best: false)
       update!(best: true)
       question.badge&.update!(user: user)
     end
+  end
+
+  private
+
+  def notify
+    AnswerNotificationJob.perform_later(self)
   end
 end

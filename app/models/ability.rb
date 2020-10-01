@@ -33,5 +33,13 @@ class Ability
     can %i[vote_up vote_down cancel_vote], [ Question, Answer ] do |resource|
       !@user.author_of?(resource)
     end
+
+    can :subscribe, Question do |question|
+      !@user.find_subscription(question)
+    end
+
+    can :unsubscribe, Question do |question|
+      @user.find_subscription(question)
+    end
   end
 end

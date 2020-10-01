@@ -6,6 +6,8 @@ class Question < ApplicationRecord
   has_many :answers, dependent: :destroy
   has_many :links, dependent: :destroy, as: :linkable
   has_one :badge, dependent: :destroy
+  has_many :subscriptions, dependent: :destroy
+  has_many :subscribers, through: :subscriptions, source: :user
 
   has_many_attached :files
 
@@ -13,4 +15,16 @@ class Question < ApplicationRecord
   accepts_nested_attributes_for :badge, reject_if: :all_blank
 
   validates :title, :body, presence: true
+
+  after_create :subscribe
+
+  def unsubscribe(user)
+    subscriptions.where(user_id: user.id).delete_all
+  end
+
+  private
+
+  def subscribe
+    subscriptions.create!(user_id: user.id)
+  end
 end

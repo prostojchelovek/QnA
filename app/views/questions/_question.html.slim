@@ -1,5 +1,6 @@
 .question question-id="#{@question.id}"
   p= @question.title
+  = render '/subscriptions/subscription', resource: @question
   p= @question.body
   - if @question.files.attached?
     - @question.files.each do |file|
